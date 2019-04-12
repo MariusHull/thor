@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./Dashboard.scss";
-import Loader from "react-loader-spinner";
+import { Link } from "react-router-dom";
+// import Loader from "react-loader-spinner";
+// Cf loaders React
 
 class DashBoard extends Component {
   constructor(props) {
@@ -9,13 +11,14 @@ class DashBoard extends Component {
     this.state = {
       data: ["test"],
       sites: [
-        { siteName: "SELF", siteUrl: "localhost:4242" },
+        { _id: 0, siteName: "SELF", siteUrl: "localhost:4242" },
         {
+          _id: 1,
           siteName: "TEST",
           siteUrl: "http://prototype.centralesupelec.fr/back/api/users"
         },
-        { siteName: "TEST2", siteUrl: "test/test" },
-        { siteName: "TEST3", siteUrl: "test/test" }
+        { _id: 2, siteName: "TEST2", siteUrl: "test/test" },
+        { _id: 3, siteName: "TEST3", siteUrl: "test/test" }
       ]
     };
   }
@@ -55,10 +58,11 @@ class DashBoard extends Component {
             <div>
               {sites.map(site => (
                 <div class="card-body">
-                  <h5 class="card-title">{site.siteName}</h5>
+                  <h5 class="card-title">
+                    <Link to={`/site/${site._id}`}>{site.siteName}</Link>
+                  </h5>
                   <p class="card-text">Site URL : {site.siteUrl}</p>
                   <p>{data}</p>
-                  <Loader type="Audio" color="#00BFFF" height="50" width="50" />
                   <div className="row space">
                     <button
                       type="button"
