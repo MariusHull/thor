@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./Dashboard.scss";
 import { Link } from "react-router-dom";
+import ModaleCreate from "./ModalCreate";
 // import Loader from "react-loader-spinner";
 // Cf loaders React
 
@@ -9,16 +10,38 @@ class DashBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: ["test"],
+      open: false,
+      nameCreate: "",
+      urlCreate: "",
       sites: [
-        { _id: 0, siteName: "SELF", siteUrl: "localhost:4242" },
+        {
+          _id: 0,
+          siteName: "SELF",
+          siteUrl: "localhost:4242",
+          status: true,
+          data: []
+        },
         {
           _id: 1,
           siteName: "TEST",
-          siteUrl: "http://prototype.centralesupelec.fr/back/api/users"
+          siteUrl: "http://prototype.centralesupelec.fr/back/api/users",
+          status: true,
+          data: []
         },
-        { _id: 2, siteName: "TEST2", siteUrl: "test/test" },
-        { _id: 3, siteName: "TEST3", siteUrl: "test/test" }
+        {
+          _id: 2,
+          siteName: "TEST2",
+          siteUrl: "test/test",
+          status: true,
+          data: []
+        },
+        {
+          _id: 3,
+          siteName: "TEST3",
+          siteUrl: "test/test",
+          status: true,
+          data: []
+        }
       ]
     };
   }
@@ -26,14 +49,44 @@ class DashBoard extends Component {
   componentDidMount() {
     this.loadSites();
   }
-  /*
-      Get the users to display given the sort and filters.
-    */
+
   loadSites = () => {
-    return 0;
+    axios.get(`http://localhost:4242/sites/`).then(res => {
+      this.setState({ sites: res.data });
+    });
   };
 
-  ping = adress => {
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
+
+  save = () => {
+    const { nameCreate, urlCreate } = this.state;
+    if (nameCreate !== "" && urlCreate !== "") {
+      axios
+        .post(`http://localhost:4242/sites/create/`, {
+          siteName: nameCreate,
+          siteUrl: urlCreate
+        })
+        .then(res => {
+          console.log(res.data);
+          this.loadSites();
+        });
+      this.onCloseModal();
+    } else {
+      window.alert(
+        "Veuillez bien renseigner le nom du site et l'url à monitorer"
+      );
+    }
+  };
+
+  ping = (adress, _id) => {
+    const { sites } = this.state;
+    console.log(sites);
     axios
       .get(adress)
       .then(res => {
@@ -41,44 +94,104 @@ class DashBoard extends Component {
       })
       .catch(error => {
         console.log("Erreur : " + error);
-        this.setState({ data: "Erreur" + error });
+        sites.forEach(site => {
+          if (site._id === _id) {
+            site.data.push({
+              date: new Date().toString(),
+              message: `${error}`
+            });
+            site.status = false;
+          }
+        });
+        console.log(sites);
+        this.setState({ sites: sites });
+        /*
         if (error.response) {
           console.log(error.response.status);
-        }
+        }*/
       });
   };
 
+  onChange = e => {
+    if (e.target.id === "name") {
+      this.setState({ nameCreate: e.target.value });
+    } else if (e.target.id === "url") {
+      this.setState({ urlCreate: e.target.value });
+    }
+  };
+
   render() {
-    const { sites, data } = this.state;
+    const { sites, open, nameCreate, urlCreate } = this.state;
     return (
       <div className="container">
-        <div class="card text-white bg-dark">
-          <div class="card-header">Header</div>
+        <ModaleCreate
+          open={open}
+          openModal={this.onOpenModal}
+          closeModal={this.onCloseModal}
+          save={this.save}
+          name={nameCreate}
+          url={urlCreate}
+          onChange={this.onChange}
+        />
+        <div className="row space">
+          <button
+            type="button"
+            className="btn btn-outline-success col"
+            onClick={this.onOpenModal}
+          >
+            <i className="fas fa-plus" /> Ajouter un site
+          </button>
+        </div>
+        <div className="row space">
+          <button type="button" className="btn btn-outline-info col">
+            Vérifier tous les sites (to be implemented)
+          </button>
+        </div>
+        <div className="card text-white bg-dark">
+          <div className="card-header">Header</div>
           {sites.length > 0 ? (
             <div>
-              {sites.map(site => (
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <Link to={`/site/${site._id}`}>{site.siteName}</Link>
-                  </h5>
-                  <p class="card-text">Site URL : {site.siteUrl}</p>
-                  <p>{data}</p>
-                  <div className="row space">
-                    <button
-                      type="button"
-                      class="btn btn-outline-success col"
-                      onClick={() => this.ping(site.siteUrl)}
-                    >
-                      Ping this adress !
-                    </button>
-                  </div>
+              {sites.length > 0 && (
+                <div>
+                  {sites.map(site => (
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <Link to={`/site/${site._id}`}>
+                          {site.siteName}
+                          &nbsp;
+                          {site.data.length > 0 && !site.status ? (
+                            <span className="badge badge-pill badge-danger">
+                              Site offline !
+                            </span>
+                          ) : (
+                            <span className="badge badge-pill badge-success">
+                              Site opérationnel !
+                            </span>
+                          )}
+                        </Link>
+                      </h5>
+                      <p className="card-text">Site URL : {site.siteUrl}</p>
+                      {site.data.length > 0 && (
+                        <p>{site.data[site.data.length - 1].message}</p>
+                      )}
+                      <div className="row space">
+                        <button
+                          type="button"
+                          className="btn btn-outline-success col"
+                          onClick={() => this.ping(site.siteUrl, site._id)}
+                        >
+                          Ping this adress !
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           ) : (
-            <div class="card-body">
-              <h5 class="card-title">Test</h5>
-              <p class="card-text">
+            <div className="card-body">
+              <h5 className="card-title">Test</h5>
+              <p className="card-text">
                 Some quick example text to build on the card title and make up
                 the bulk of the card's content.
               </p>
