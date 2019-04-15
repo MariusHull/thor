@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./Dashboard.scss";
 import Loader from "react-loader-spinner";
+import url from "../config";
 // Cf loaders React
 
 class SiteDetail extends Component {
@@ -17,11 +18,9 @@ class SiteDetail extends Component {
   }
 
   loadSite = () => {
-    axios
-      .get(`http://localhost:4242/sites/${this.props.match.params.id}`)
-      .then(res => {
-        this.setState({ site: res.data });
-      });
+    axios.get(`${url}sites/${this.props.match.params.id}`).then(res => {
+      this.setState({ site: res.data });
+    });
   };
 
   delete = () => {
@@ -30,10 +29,7 @@ class SiteDetail extends Component {
       window.confirm("Êtes-vous bien sûr(e) de vouloir supprimer ce site ?")
     ) {
       axios
-        .delete(
-          `http://localhost:4242/sites/${this.props.match.params.id}`,
-          site
-        )
+        .delete(`${url}/sites/${this.props.match.params.id}`, site)
         .then(res => {
           this.props.history.push(`/`);
         });

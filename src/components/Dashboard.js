@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Dashboard.scss";
 import { Link } from "react-router-dom";
 import ModaleCreate from "./ModalCreate";
+import url from "../config";
 // import Loader from "react-loader-spinner";
 // Cf loaders React
 
@@ -16,30 +17,9 @@ class DashBoard extends Component {
       sites: [
         {
           _id: 0,
-          siteName: "SELF",
-          siteUrl: "localhost:4242",
-          status: true,
-          data: []
-        },
-        {
-          _id: 1,
-          siteName: "TEST",
-          siteUrl: "http://prototype.centralesupelec.fr/back/api/users",
-          status: true,
-          data: []
-        },
-        {
-          _id: 2,
-          siteName: "TEST2",
-          siteUrl: "test/test",
-          status: true,
-          data: []
-        },
-        {
-          _id: 3,
-          siteName: "TEST3",
-          siteUrl: "test/test",
-          status: true,
+          siteName: "Monithor est down",
+          siteUrl: "http://monithor.fr/back/",
+          status: false,
           data: []
         }
       ]
@@ -51,7 +31,7 @@ class DashBoard extends Component {
   }
 
   loadSites = () => {
-    axios.get(`http://localhost:4242/sites/`).then(res => {
+    axios.get(`${url}sites/`).then(res => {
       this.setState({ sites: res.data });
     });
   };
@@ -68,7 +48,7 @@ class DashBoard extends Component {
     const { nameCreate, urlCreate } = this.state;
     if (nameCreate !== "" && urlCreate !== "") {
       axios
-        .post(`http://localhost:4242/sites/create/`, {
+        .post(`${url}sites/create/`, {
           siteName: nameCreate,
           siteUrl: urlCreate
         })
