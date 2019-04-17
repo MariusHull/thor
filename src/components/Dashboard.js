@@ -31,7 +31,7 @@ class DashBoard extends Component {
   }
 
   loadSites = () => {
-    axios.get(`${url}sites/`).then(res => {
+    axios.get(`${url}sites`).then(res => {
       this.setState({ sites: res.data });
     });
   };
@@ -71,6 +71,12 @@ class DashBoard extends Component {
       .get(adress)
       .then(res => {
         console.log(res.data);
+        sites.forEach(site => {
+          if (site._id === _id) {
+            site.status = true;
+          }
+        });
+        this.setState({ sites: sites });
       })
       .catch(error => {
         console.log("Erreur : " + error);
@@ -139,7 +145,7 @@ class DashBoard extends Component {
                         <Link to={`/site/${site._id}`}>
                           {site.siteName}
                           &nbsp;
-                          {site.data.length > 0 && !site.status ? (
+                          {!site.status ? (
                             <span className="badge badge-pill badge-danger">
                               Site offline !
                             </span>
