@@ -6,3 +6,13 @@
   height: 50px;
   width: 50px;
 }
+
+body {
+  font-family: "MsLight";
+}
+
+@font-face {
+  font-family: "MsLight";
+  src: url("../assets/polices/Montserrat/Montserrat-Light.ttf")
+    format("truetype");
+}

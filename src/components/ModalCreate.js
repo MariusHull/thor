@@ -22,6 +22,8 @@ class ModalCreate extends Component {
           Si vous voulez monitorer un site supplémentaire, vous pouvez l'ajouter
           ici. Soyez bien sûr que l'adresse du Back-end est correcte, puis
           donnez lui un titre et cliquez sur "+ Ajouter le site".
+          <br />
+          N.B. : Pensez-bien à régler vos paramètres CORS!
         </p>
         <br />
         <br />
@@ -46,6 +48,17 @@ class ModalCreate extends Component {
             class="form-control"
             id="url"
             placeholder="Ex: monsite/api/"
+          />
+        </div>
+        <div class="form-group">
+          <label for="desc">Description (facultatif) : </label>
+          <input
+            type="text"
+            value={this.props.desc}
+            onChange={this.props.onChange}
+            class="form-control"
+            id="desc"
+            placeholder="Ex: Backend du projet..."
           />
         </div>
         <button class="btn btn-success" onClick={this.props.save}>

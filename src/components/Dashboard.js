@@ -14,6 +14,7 @@ class DashBoard extends Component {
       open: false,
       nameCreate: "",
       urlCreate: "",
+      descCreate: "",
       sites: [
         {
           _id: 0,
@@ -45,15 +46,15 @@ class DashBoard extends Component {
   };
 
   save = () => {
-    const { nameCreate, urlCreate } = this.state;
+    const { nameCreate, urlCreate, descCreate } = this.state;
     if (nameCreate !== "" && urlCreate !== "") {
       axios
         .post(`${url}sites/create/`, {
           siteName: nameCreate,
-          siteUrl: urlCreate
+          siteUrl: urlCreate,
+          siteDesc: descCreate
         })
         .then(res => {
-          console.log(res.data);
           this.loadSites();
         });
       this.onCloseModal();
@@ -64,38 +65,16 @@ class DashBoard extends Component {
     }
   };
 
-  ping = (adress, _id) => {
+  ping = _id => {
     const { sites } = this.state;
-    console.log(sites);
-    axios
-      .get(adress)
-      .then(res => {
-        console.log(res.data);
-        sites.forEach(site => {
-          if (site._id === _id) {
-            site.status = true;
-          }
-        });
-        this.setState({ sites: sites });
-      })
-      .catch(error => {
-        console.log("Erreur : " + error);
-        sites.forEach(site => {
-          if (site._id === _id) {
-            site.data.push({
-              date: new Date().toString(),
-              message: `${error}`
-            });
-            site.status = false;
-          }
-        });
-        console.log(sites);
-        this.setState({ sites: sites });
-        /*
-        if (error.response) {
-          console.log(error.response.status);
-        }*/
+    axios.get(`${url}sites/ping/${_id}`).then(res => {
+      sites.forEach(site => {
+        if (site._id === _id) {
+          site = res.data;
+        }
       });
+      this.loadSites();
+    });
   };
 
   onChange = e => {
@@ -103,11 +82,13 @@ class DashBoard extends Component {
       this.setState({ nameCreate: e.target.value });
     } else if (e.target.id === "url") {
       this.setState({ urlCreate: e.target.value });
+    } else if (e.target.id === "desc") {
+      this.setState({ descCreate: e.target.value });
     }
   };
 
   render() {
-    const { sites, open, nameCreate, urlCreate } = this.state;
+    const { sites, open, nameCreate, urlCreate, descCreate } = this.state;
     return (
       <div className="container">
         <ModaleCreate
@@ -117,6 +98,7 @@ class DashBoard extends Component {
           save={this.save}
           name={nameCreate}
           url={urlCreate}
+          desc={descCreate}
           onChange={this.onChange}
         />
         <div className="row space">
@@ -145,17 +127,21 @@ class DashBoard extends Component {
                         <Link to={`/site/${site._id}`}>
                           {site.siteName}
                           &nbsp;
-                          {!site.status ? (
-                            <span className="badge badge-pill badge-danger">
-                              Site offline !
-                            </span>
-                          ) : (
-                            <span className="badge badge-pill badge-success">
-                              Site opérationnel !
-                            </span>
-                          )}
                         </Link>
                       </h5>
+                      <p>
+                        Status : &nbsp;
+                        {!site.status ? (
+                          <span className="badge badge-pill badge-danger">
+                            Site offline !
+                          </span>
+                        ) : (
+                          <span className="badge badge-pill badge-success">
+                            Site opérationnel !
+                          </span>
+                        )}
+                        &nbsp; (dernière mise à jour : {site.timeToPing})
+                      </p>
                       <p className="card-text">Site URL : {site.siteUrl}</p>
                       {site.data.length > 0 && (
                         <p>{site.data[site.data.length - 1].message}</p>
@@ -164,7 +150,7 @@ class DashBoard extends Component {
                         <button
                           type="button"
                           className="btn btn-outline-success col"
-                          onClick={() => this.ping(site.siteUrl, site._id)}
+                          onClick={() => this.ping(site._id)}
                         >
                           Ping this adress !
                         </button>

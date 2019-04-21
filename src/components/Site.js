@@ -29,7 +29,7 @@ class SiteDetail extends Component {
       window.confirm("Êtes-vous bien sûr(e) de vouloir supprimer ce site ?")
     ) {
       axios
-        .delete(`${url}/sites/${this.props.match.params.id}`, site)
+        .delete(`${url}sites/${this.props.match.params.id}`, site)
         .then(res => {
           this.props.history.push(`/`);
         });
@@ -38,12 +38,9 @@ class SiteDetail extends Component {
 
   ping = (adress, _id) => {
     const { site } = this.state;
-    console.log(site);
     axios
       .get(site.siteUrl)
-      .then(res => {
-        console.log(res.data);
-      })
+      .then(res => {})
       .catch(error => {
         console.log("Erreur : " + error);
         site.data.push({
@@ -72,14 +69,19 @@ class SiteDetail extends Component {
                 &nbsp;
                 {site.data.length > 0 && !site.status ? (
                   <span className="badge badge-pill badge-danger">
-                    Site offline !
+                    Site offline ! {site.timeToPing}
                   </span>
                 ) : (
                   <span className="badge badge-pill badge-success">
-                    Site opérationnel !
+                    Site opérationnel ! {site.timeToPing}
                   </span>
                 )}
               </h5>
+
+              {site.siteDesc !== undefined && site.siteDesc !== null && (
+                <p>{site.siteDesc}</p>
+              )}
+
               <div className="row space">
                 <button
                   type="button"

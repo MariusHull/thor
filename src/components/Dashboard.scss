@@ -5,3 +5,13 @@
 .space {
   padding: 10px;
 }
+
+body {
+  font-family: "MsLight";
+}
+
+@font-face {
+  font-family: "MsLight";
+  src: url("../assets/polices/Montserrat/Montserrat-Light.ttf")
+    format("truetype");
+}
