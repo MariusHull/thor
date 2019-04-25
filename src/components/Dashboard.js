@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./Dashboard.scss";
+import { Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
 import ModaleCreate from "./ModalCreate";
+
 import url from "../config";
 // import Loader from "react-loader-spinner";
 // Cf loaders React
@@ -15,6 +17,7 @@ class DashBoard extends Component {
       nameCreate: "",
       urlCreate: "",
       descCreate: "",
+      accordion: false,
       sites: [
         {
           _id: 0,
@@ -30,6 +33,11 @@ class DashBoard extends Component {
   componentDidMount() {
     this.loadSites();
   }
+
+  toggleAccordion = () => {
+    const { accordion } = this.state;
+    this.setState({ accordion: !accordion });
+  };
 
   loadSites = () => {
     axios.get(`${url}sites`).then(res => {
@@ -88,9 +96,60 @@ class DashBoard extends Component {
   };
 
   render() {
-    const { sites, open, nameCreate, urlCreate, descCreate } = this.state;
+    const {
+      sites,
+      open,
+      nameCreate,
+      urlCreate,
+      descCreate,
+      accordion
+    } = this.state;
     return (
       <div className="container">
+        <div class="card text-white bg-secondary">
+          <div class="card-header" onClick={this.toggleAccordion}>
+            {accordion && (
+              <div>
+                <i className="fas fa-chevron-up" /> About Monithor
+              </div>
+            )}
+            {!accordion && (
+              <div>
+                <i className="fas fa-chevron-down" /> About Monithor
+              </div>
+            )}
+          </div>
+          <Collapse isOpen={accordion}>
+            <div class="card-body">
+              <h5 class="card-title">
+                The site is currently in development !{" "}
+              </h5>
+              <p class="card-text">
+                The updates are very frequent, be sure to come back to check for
+                updates!
+              </p>
+              <hr />
+              <h5 class="card-title">Monithor : How it works? </h5>
+              <p class="card-text">
+                The principle is really simple. If you have deployed a backend
+                in an unstable version and want to monitor it in case it
+                crashes, Monithor is just for you! <br />
+                Enter an http adress and monithor will ping it whenever you
+                want. To do so, is simply sends an http GET request and checks
+                for errors in the response.
+              </p>
+              <hr />
+              <h5 class="card-title">Future updates will include : </h5>
+              <p class="card-text">
+                Automatic backend checking with selection of the time interval
+                (hourly, daily, ...) <br />
+                Selecting the method of the ping <br />
+                Seeing the historic of each of the backends' availability <br />
+                User personnal accounts with login <br />
+              </p>
+            </div>
+          </Collapse>
+        </div>
         <ModaleCreate
           open={open}
           openModal={this.onOpenModal}
@@ -107,16 +166,16 @@ class DashBoard extends Component {
             className="btn btn-outline-success col"
             onClick={this.onOpenModal}
           >
-            <i className="fas fa-plus" /> Ajouter un site
+            <i className="fas fa-plus" /> Add a backend
           </button>
         </div>
         <div className="row space">
           <button type="button" className="btn btn-outline-info col">
-            Vérifier tous les sites (to be implemented)
+            Check all backends (to be implemented)
           </button>
         </div>
         <div className="card text-white bg-dark">
-          <div className="card-header">Header</div>
+          <div className="card-header">Monitored backends</div>
           {sites.length > 0 ? (
             <div>
               {sites.length > 0 && (
@@ -137,10 +196,10 @@ class DashBoard extends Component {
                           </span>
                         ) : (
                           <span className="badge badge-pill badge-success">
-                            Site opérationnel !
+                            Site running !
                           </span>
                         )}
-                        &nbsp; (dernière mise à jour : {site.timeToPing})
+                        &nbsp; (last update : {site.timeToPing})
                       </p>
                       <p className="card-text">Site URL : {site.siteUrl}</p>
                       {site.data.length > 0 && (
@@ -162,11 +221,8 @@ class DashBoard extends Component {
             </div>
           ) : (
             <div className="card-body">
-              <h5 className="card-title">Test</h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
+              <h5 className="card-title">error...</h5>
+              <p className="card-text">Error on loading</p>
             </div>
           )}
         </div>

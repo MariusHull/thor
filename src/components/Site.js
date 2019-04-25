@@ -26,7 +26,9 @@ class SiteDetail extends Component {
   delete = () => {
     const { site } = this.state;
     if (
-      window.confirm("Êtes-vous bien sûr(e) de vouloir supprimer ce site ?")
+      window.confirm(
+        "Are you sure you want to delete this backend from the monitoring list?"
+      )
     ) {
       axios
         .delete(`${url}sites/${this.props.match.params.id}`, site)
@@ -61,7 +63,7 @@ class SiteDetail extends Component {
     return (
       <div className="container">
         <div className="card text-white bg-dark">
-          <div className="card-header">Disponibilité site</div>
+          <div className="card-header">Site availability</div>
           {site._id !== null ? (
             <div className="card-body">
               <h5 className="card-title">
@@ -73,7 +75,7 @@ class SiteDetail extends Component {
                   </span>
                 ) : (
                   <span className="badge badge-pill badge-success">
-                    Site opérationnel ! {site.timeToPing}
+                    Site running ! {site.timeToPing}
                   </span>
                 )}
               </h5>
@@ -88,7 +90,7 @@ class SiteDetail extends Component {
                   className="btn btn-outline-success col"
                   onClick={this.ping}
                 >
-                  Tester ce site
+                  Tester this website
                 </button>
               </div>
               <div className="row space">
@@ -97,7 +99,7 @@ class SiteDetail extends Component {
                   className="btn btn-outline-danger col"
                   onClick={this.delete}
                 >
-                  Supprimer ce site
+                  Suppress this website
                 </button>
               </div>
               <p className="card-text">
@@ -106,7 +108,7 @@ class SiteDetail extends Component {
             </div>
           ) : (
             <div className="card-body">
-              <h5 className="card-title">Chargement du site</h5>
+              <h5 className="card-title">Loading site information...</h5>
               <Loader
                 type="Ball-Triangle"
                 color="white"

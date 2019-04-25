@@ -19,16 +19,16 @@ class ModalCreate extends Component {
       >
         <br />
         <p>
-          Si vous voulez monitorer un site supplémentaire, vous pouvez l'ajouter
-          ici. Soyez bien sûr que l'adresse du Back-end est correcte, puis
-          donnez lui un titre et cliquez sur "+ Ajouter le site".
+          If you want to monitor another website, you can add its back here. Be
+          sure that the back adress is correct and accessible from GET method,
+          and give it a title, and click on "+ Add the website".
           <br />
-          N.B. : Pensez-bien à régler vos paramètres CORS!
+          N.B. : Be sure to update your CORS parameters!
         </p>
         <br />
         <br />
         <div class="form-group">
-          <label for="name">Nom du site : {this.props.name}</label>
+          <label for="name">Name of the website : {this.props.name}</label>
           <input
             type="text"
             value={this.props.name}
@@ -40,7 +40,7 @@ class ModalCreate extends Component {
           />
         </div>
         <div class="form-group">
-          <label for="url">URL du site : {this.props.url}</label>
+          <label for="url">URL of the backend : {this.props.url}</label>
           <input
             type="text"
             value={this.props.url}
@@ -51,7 +51,7 @@ class ModalCreate extends Component {
           />
         </div>
         <div class="form-group">
-          <label for="desc">Description (facultatif) : </label>
+          <label for="desc">Description (facultative) : </label>
           <input
             type="text"
             value={this.props.desc}
@@ -62,7 +62,7 @@ class ModalCreate extends Component {
           />
         </div>
         <button class="btn btn-success" onClick={this.props.save}>
-          <i class="fas fa-plus" /> Ajouter le site
+          <i class="fas fa-plus" /> Add the website
         </button>
       </Modal>
     );
