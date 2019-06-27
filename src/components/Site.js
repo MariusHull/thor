@@ -83,6 +83,9 @@ class SiteDetail extends Component {
               {site.siteDesc !== undefined && site.siteDesc !== null && (
                 <p>{site.siteDesc}</p>
               )}
+              {site.latestRep && (
+                <div class="overflow-auto">{site.latestRep}</div>
+              )}
 
               <div className="row space">
                 <button
