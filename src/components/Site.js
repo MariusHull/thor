@@ -38,25 +38,39 @@ class SiteDetail extends Component {
     }
   };
 
-  ping = (adress, _id) => {
+  ping = () => {
     const { site } = this.state;
-    axios
-      .get(site.siteUrl)
-      .then(res => {})
-      .catch(error => {
-        console.log("Erreur : " + error);
-        site.data.push({
-          date: new Date().toString(),
-          message: `${error}`
-        });
-        site.status = false;
-        this.setState({ site: site });
-        /*
-        if (error.response) {
-          console.log(error.response.status);
-        }*/
-      });
+    axios.get(`${url}sites/ping/${site._id}`).then(res => {
+      // let newSite = res.data;
+      // sites.filter(site => site._id === newSite._id)=newSite;
+      // sites.forEach(site => {
+      //   if (site._id === _id) {
+      //     site = res.data;
+      //   }
+      // });
+      this.loadSite();
+    });
   };
+
+  // ping = (adress, _id) => {
+  //   const { site } = this.state;
+  //   axios
+  //     .get(site.siteUrl)
+  //     .then(res => {})
+  //     .catch(error => {
+  //       console.log("Erreur : " + error);
+  //       site.data.push({
+  //         date: new Date().toString(),
+  //         message: `${error}`
+  //       });
+  //       site.status = false;
+  //       this.setState({ site: site });
+  //       /*
+  //       if (error.response) {
+  //         console.log(error.response.status);
+  //       }*/
+  //     });
+  // };
 
   render() {
     const { site } = this.state;
