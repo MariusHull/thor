@@ -28,7 +28,7 @@ class ModalCreate extends Component {
         <br />
         <br />
         <div class="form-group">
-          <label for="name">Name of the website : {this.props.name}</label>
+          {/* <label for="name">Name of the website : {this.props.name}</label> */}
           <input
             type="text"
             value={this.props.name}
@@ -40,7 +40,7 @@ class ModalCreate extends Component {
           />
         </div>
         <div class="form-group">
-          <label for="url">URL of the backend : {this.props.url}</label>
+          {/* <label for="url">URL of the backend : {this.props.url}</label> */}
           <input
             type="text"
             value={this.props.url}

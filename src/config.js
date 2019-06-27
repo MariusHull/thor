@@ -1,3 +1,3 @@
-const url = "http://localhost:4200/";
+const url = "http://monithor.fr/";
 
 export default url;

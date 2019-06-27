@@ -18,6 +18,7 @@ class DashBoard extends Component {
       urlCreate: "",
       descCreate: "",
       accordion: false,
+      pinging: false,
       sites: [
         {
           _id: 0,
@@ -76,12 +77,25 @@ class DashBoard extends Component {
   ping = _id => {
     const { sites } = this.state;
     axios.get(`${url}sites/ping/${_id}`).then(res => {
-      sites.forEach(site => {
-        if (site._id === _id) {
-          site = res.data;
-        }
-      });
+      // let newSite = res.data;
+      // sites.filter(site => site._id === newSite._id)=newSite;
+      // sites.forEach(site => {
+      //   if (site._id === _id) {
+      //     site = res.data;
+      //   }
+      // });
       this.loadSites();
+    });
+  };
+
+  pingAll = () => {
+    const { pinging } = this.state;
+    if (pinging > 0) return 0;
+    this.setState({ pinging: 2 });
+    setTimeout(() => this.setState({ pinging: this.state.pinging - 1 }), 500);
+    axios.get(`${url}sites/pingall/`).then(res => {
+      this.loadSites();
+      this.setState({ pinging: pinging - 1 });
     });
   };
 
@@ -102,7 +116,8 @@ class DashBoard extends Component {
       nameCreate,
       urlCreate,
       descCreate,
-      accordion
+      accordion,
+      pinging
     } = this.state;
     return (
       <div className="container">
@@ -170,8 +185,19 @@ class DashBoard extends Component {
           </button>
         </div>
         <div className="row space">
-          <button type="button" className="btn btn-outline-info col">
-            Check all backends (to be implemented)
+          <button
+            type="button"
+            onClick={this.pingAll}
+            className="btn btn-outline-info col"
+          >
+            Check all backends{" "}
+            {pinging && (
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              />
+            )}
           </button>
         </div>
         <div className="card text-white bg-dark">

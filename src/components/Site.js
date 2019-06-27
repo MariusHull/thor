@@ -90,7 +90,7 @@ class SiteDetail extends Component {
                   className="btn btn-outline-success col"
                   onClick={this.ping}
                 >
-                  Tester this website
+                  Test this website
                 </button>
               </div>
               <div className="row space">
