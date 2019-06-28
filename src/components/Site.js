@@ -18,7 +18,7 @@ class SiteDetail extends Component {
   }
 
   loadSite = () => {
-    axios.get(`${url}sites/${this.props.match.params.id}`).then(res => {
+    axios.get(`${url}sites/recover/${this.props.match.params.id}`).then(res => {
       this.setState({ site: res.data });
     });
   };
