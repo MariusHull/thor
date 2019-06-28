@@ -93,7 +93,7 @@ class DashBoard extends Component {
     if (pinging > 0) return 0;
     this.setState({ pinging: 2 });
     setTimeout(() => this.setState({ pinging: this.state.pinging - 1 }), 500);
-    axios.get(`${url}sites/pingall/`).then(res => {
+    axios.get(`${url}sites/pingall`).then(res => {
       this.loadSites();
       this.setState({ pinging: pinging - 1 });
     });
