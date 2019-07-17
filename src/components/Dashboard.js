@@ -75,15 +75,7 @@ class DashBoard extends Component {
   };
 
   ping = _id => {
-    const { sites } = this.state;
     axios.get(`${url}sites/ping/${_id}`).then(res => {
-      // let newSite = res.data;
-      // sites.filter(site => site._id === newSite._id)=newSite;
-      // sites.forEach(site => {
-      //   if (site._id === _id) {
-      //     site = res.data;
-      //   }
-      // });
       this.loadSites();
     });
   };
